@@ -1,0 +1,157 @@
+---
+title: "DSCI 30100: Lesson 01"
+output: html_notebook
+---
+
+# Setup
+
+```{r}
+# Data
+library(AER)
+
+# Manipulation
+library(dplyr)
+
+# Visualization
+library(ggplot2)
+```
+
+# Import: Impact of Beauty on Instructor's Teaching Ratings
+
+  * Hamermesh, D.S., and Parker, A. (2005). Beauty in the Classroom: Instructors' Pulchritude and Putative Pedagogical Productivity. Economics of Education Review, 24, 369-376.
+  * [See CRAN:](https://cran.r-project.org/web/packages/AER/AER.pdf), page 164-165.
+
+## Data
+
+Data on course evaluations, course characteristics, and professor characteristics for 463 courses for the academic years 2000-2002 at the University of Texas at Austin. A sample of student instructional ratings for a group of university teachers along with beauty rating (average from six independent judges) and a number of other characteristics. The data were provided by Prof. Hamermesh.
+
+  * __minority__: (factor) Does the instructor belong to a minority (non-Caucasian)?
+  * __age__:               The professor's age.
+  * __gender__: (factor)   Indicating instructor's gender.
+  * __credits__: (factor)  Is the course a single-credit elective (e.g., yoga, aerobics, dance)?
+  * __beauty__:            Rating of the instructor's physical appearance by a panel of six students, averaged across the six panelists, shifted to have a mean of zero.
+  * __eval__:              Course overall teaching evaluation score, on a scale of 1 (very unsatisfactory) to 5 (excellent).
+  * __division__: (factor) Is the course an upper or lower division course? (Lower division courses are mainly large freshman and sophomore courses)?
+  * __native__: (factor)   Is the instructor a native English speaker?
+  * __tenure__: (factor)   Is the instructor on tenure track?
+  * __students__:          Number of students that participated in the evaluation.
+  * __allstudents__:       Number of students enrolled in the course.
+  * __prof__: (factor)     Indicating instructor identifier.
+
+
+```{r}
+data("TeachingRatings")
+```
+
+# First Steps
+
+```{r}
+TeachingRatings
+```
+
+```{r}
+summary(TeachingRatings)
+```
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty))
+```
+
+## Exercise Examples
+
+```{r}
+ggplot(data = TeachingRatings)
+```
+
+# Aesthetic Mapping
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, colour = gender))
+```
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, size = students))
+```
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, alpha = students))
+```
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, shape = gender))
+```
+
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, shape = gender))
+```
+
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, shape = gender), colour = "cornflowerblue")
+```
+
+## Exercise Examples
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty, colour = "cornflowerblue"))
+```
+
+# Common Problems
+
+```{r}
+ggplot(data = TeachingRatings)
+  + geom_point(mapping = aes(x = age, y = beauty))
+```
+
+# Facets
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_point(mapping = aes(x = age, y = beauty)) + 
+  facet_wrap(~ native)
+```
+
+# Geometric Objects
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_smooth(mapping = aes(x = age, y = beauty))
+```
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_smooth(mapping = aes(x = age, y = beauty)) + 
+  geom_point(mapping = aes(x = age, y = beauty))
+```
+
+```{r}
+ggplot(data = TeachingRatings) + 
+  geom_smooth(mapping = aes(x = age, y = beauty, colour = gender)) + 
+  geom_point(mapping = aes(x = age, y = beauty, colour = gender))
+```
+
+# Function Short Cuts
+
+```{r}
+ggplot(TeachingRatings, aes(age, beauty, colour = gender)) + 
+  geom_smooth() + 
+  geom_point()
+```
+
+
+# Just For Fun
+
+```{r}
+lm(eval ~ beauty + age + minority + gender + tenure + division, TeachingRatings) %>% 
+  summary()
+```
+
